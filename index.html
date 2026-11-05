@@ -7,9 +7,17 @@
 <meta name="description" content="Go Farther: a space rocket game. The farther you fly, the more you collect.">
 <meta name="theme-color" content="#0c0a22">
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Nunito:wght@500;700;800&family=Space+Mono:wght@400;700&display=swap">
+<link rel="preload" href="fonts/bungee-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/nunito-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* Self-hosted fonts (@fontsource, SIL OFL 1.1). If they fail, the stacks below fall back to system fonts. */
+@font-face{font-family:'Bungee';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/bungee-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/nunito-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/nunito-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:800;font-display:swap;src:url(fonts/nunito-latin-800-normal.woff2) format('woff2')}
+@font-face{font-family:'Space Mono';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/space-mono-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Space Mono';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/space-mono-latin-700-normal.woff2) format('woff2')}
+</style>
 <style>
 /* Layout: full-bleed canvas game; HTML mission panels float over space. Single deliberate dark look. */
 :root{
