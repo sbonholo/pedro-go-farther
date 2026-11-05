@@ -29,7 +29,7 @@
   --mono:'Space Mono',ui-monospace,Menlo,Consolas,monospace;
   color-scheme:dark;
 }
-html,body{height:100%}
+html,body{height:100%;margin:0}
 [hidden]{display:none!important}
 *,*::before,*::after{box-sizing:border-box}
 body{background:var(--void);color:var(--ink);font-family:var(--body);font-size:15px;overflow:hidden;-webkit-tap-highlight-color:transparent}
@@ -37,7 +37,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--body);font-size:1
 canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
 
 .screen{position:absolute;inset:0;overflow-y:auto;display:flex;flex-direction:column;
-  padding-block:20px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  padding-top:calc(20px + env(safe-area-inset-top,0px));padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .panel{width:100%;max-width:560px;margin:auto;background:var(--panel);border:1px solid var(--line);
   border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:16px;backdrop-filter:blur(6px)}
 h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;text-wrap:balance;letter-spacing:.01em}
@@ -111,7 +111,7 @@ button:focus-visible{outline:3px solid var(--ice);outline-offset:2px}
 .loggrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
 
 .hud{position:absolute;left:0;right:0;top:0;pointer-events:none;display:flex;flex-direction:column;gap:8px;
-  padding-top:12px;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px))}
+  padding-top:calc(12px + env(safe-area-inset-top,0px));padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px))}
 .hud-row{display:flex;gap:10px;align-items:center}
 .pill{font-family:var(--display);font-size:18px;color:var(--star);background:rgba(12,10,34,.7);border:1px solid var(--line);border-radius:999px;padding:6px 12px;white-space:nowrap}
 .prog{flex:1;min-width:0}
