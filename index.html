@@ -143,6 +143,9 @@ button:focus-visible{outline:3px solid var(--ice);outline-offset:2px}
 .toast.warn{background:rgba(48,16,14,.94);border-color:var(--flame)}
 .toast.warn b{color:var(--flame)}
 @keyframes pop{from{transform:translate(-50%,-10px) scale(.96);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+#oops{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:99;
+  max-width:calc(100% - 32px);min-height:44px;padding:10px 16px;border-radius:12px;border:1px solid var(--danger);
+  background:rgba(48,16,14,.96);color:var(--ink);font:800 14px var(--body);cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.5)}
 /* phones: keep every label at 12px or larger */
 @media (max-width:640px),(pointer:coarse){.route li,.fact b,.data b,.fuelrow span,.toast small{font-size:12px}}
 @media (prefers-reduced-motion:reduce){.toast{animation:none}.btn,.buy{transition:none}}
@@ -268,6 +271,22 @@ button:focus-visible{outline:3px solid var(--ice);outline-offset:2px}
   </section>
 </div>
 
+<script>
+/* friendly crash toast: shown once, tap reloads the game */
+(()=>{
+  let shown=false;
+  const oops=msg=>{
+    if(shown||/ResizeObserver loop/i.test(String(msg||'')))return;
+    shown=true;
+    const go=()=>{const b=document.createElement('button');b.id='oops';b.type='button';
+      b.textContent='Something went wrong - tap to reload';b.addEventListener('click',()=>location.reload());
+      document.body.appendChild(b)};
+    document.body?go():addEventListener('DOMContentLoaded',go);
+  };
+  window.onerror=msg=>{oops(msg)};
+  window.onunhandledrejection=e=>oops(e.reason&&e.reason.message);
+})();
+</script>
 <script>
 (()=>{
 const $=s=>document.querySelector(s);
