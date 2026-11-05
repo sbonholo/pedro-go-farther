@@ -1139,7 +1139,17 @@ function setPause(on){if(mode!=='flight'&&mode!=='surface')return;paused=on;show
 document.querySelectorAll('[data-pause]').forEach(b=>b.addEventListener('click',()=>setPause(true)));
 $('#resumeBtn').addEventListener('click',()=>setPause(false));
 $('#quitBtn').addEventListener('click',()=>{if(mode==='flight'&&F)save.stars+=F.stars;if(mode==='surface'&&S)save.stars+=S.stars;persist();goHangar()});
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&!paused)setPause(true)});
+/* hidden tab: pause play, stop the loop and silence audio; resume loop + audio on return */
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){
+    if(!paused)setPause(true);
+    if(rafId){cancelAnimationFrame(rafId);rafId=0}
+    try{if(AC&&AC.state==='running')AC.suspend()}catch(e){}
+  }else{
+    try{if(AC&&AC.state==='suspended')AC.resume()}catch(e){}
+    if(!rafId){last=performance.now();rafId=requestAnimationFrame(frame)}
+  }
+});
 
 /* ---------- input ---------- */
 const KM={ArrowLeft:'l',a:'l',A:'l',ArrowRight:'r',d:'r',D:'r',ArrowUp:'u',w:'u',W:'u',' ':'u',ArrowDown:'d',s:'d',S:'d'};
@@ -1166,7 +1176,7 @@ function renderMenu(dt){
 }
 
 /* ---------- loop ---------- */
-let last=performance.now();
+let last=performance.now(),rafId=0;
 function frame(now){
   const dt=Math.min(.05,(now-last)/1000);last=now;
   if(!paused){clock+=dt;if(mode==='flight'&&F)updFlight(dt);else if(mode==='surface'&&S)updSurface(dt)}
@@ -1181,9 +1191,9 @@ function frame(now){
     if(toastT>0){toastT-=dt;if(toastT<=0)$('#toast').hidden=true}
     if(toastT<=0&&tq.length&&(mode==='flight'||mode==='surface')){const n=tq.shift(),t=$('#toast');t.className='toast'+(n.kind==='good'?'':' '+n.kind);t.innerHTML=n.html;t.hidden=false;t.style.animation='none';void t.offsetWidth;t.style.animation='';toastT=n.sec}
   }
-  requestAnimationFrame(frame);
+  rafId=document.hidden?0:requestAnimationFrame(frame);
 }
-resize();goHangar();requestAnimationFrame(frame);
+resize();goHangar();rafId=requestAnimationFrame(frame);
 })();
 </script>
 
