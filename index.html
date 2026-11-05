@@ -1,9 +1,23 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Go Farther</title>
+<meta name="description" content="Go Farther: a space rocket game. The farther you fly, the more you collect.">
+<meta name="theme-color" content="#0c0a22">
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Nunito:wght@500;700;800&family=Space+Mono:wght@400;700&display=swap">
+<link rel="preload" href="fonts/bungee-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/nunito-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* Self-hosted fonts (@fontsource, SIL OFL 1.1). If they fail, the stacks below fall back to system fonts. */
+@font-face{font-family:'Bungee';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/bungee-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/nunito-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/nunito-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:800;font-display:swap;src:url(fonts/nunito-latin-800-normal.woff2) format('woff2')}
+@font-face{font-family:'Space Mono';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/space-mono-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Space Mono';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/space-mono-latin-700-normal.woff2) format('woff2')}
+</style>
 <style>
 /* Layout: full-bleed canvas game; HTML mission panels float over space. Single deliberate dark look. */
 :root{
@@ -15,7 +29,7 @@
   --mono:'Space Mono',ui-monospace,Menlo,Consolas,monospace;
   color-scheme:dark;
 }
-html,body{height:100%}
+html,body{height:100%;margin:0}
 [hidden]{display:none!important}
 *,*::before,*::after{box-sizing:border-box}
 body{background:var(--void);color:var(--ink);font-family:var(--body);font-size:15px;overflow:hidden;-webkit-tap-highlight-color:transparent}
@@ -23,7 +37,7 @@ body{background:var(--void);color:var(--ink);font-family:var(--body);font-size:1
 canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
 
 .screen{position:absolute;inset:0;overflow-y:auto;display:flex;flex-direction:column;
-  padding-block:20px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  padding-top:calc(20px + env(safe-area-inset-top,0px));padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .panel{width:100%;max-width:560px;margin:auto;background:var(--panel);border:1px solid var(--line);
   border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:16px;backdrop-filter:blur(6px)}
 h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;text-wrap:balance;letter-spacing:.01em}
@@ -45,7 +59,7 @@ p{margin:0;line-height:1.5}
 .btn.big{font-size:20px;padding:16px 26px;flex:1 1 200px}
 .panel > .btn.big{flex:none}
 .btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line);box-shadow:none}
-.btn.small{font-size:12px;padding:9px 12px}
+.btn.small{font-size:12px;padding:9px 12px;min-height:44px}
 button:focus-visible{outline:3px solid var(--ice);outline-offset:2px}
 
 .route{display:flex;list-style:none;padding:4px 0 2px;margin:0;overflow-x:auto;scrollbar-width:thin}
@@ -59,7 +73,7 @@ button:focus-visible{outline:3px solid var(--ice);outline-offset:2px}
 .route li.cur .dot{box-shadow:0 0 0 3px var(--void),0 0 0 5px var(--star)}
 
 .chips{display:flex;gap:8px;flex-wrap:wrap}
-.chip{font:800 13px var(--body);padding:8px 12px;border-radius:999px;border:2px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.chip{font:800 13px var(--body);padding:8px 12px;min-height:44px;border-radius:999px;border:2px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
 .chip[aria-pressed="true"]{background:var(--star);border-color:var(--star);color:#2a1d00}
 .trip{font-family:var(--mono);font-size:12.5px;line-height:1.6;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.04);border:1px dashed var(--line)}
 .ok{color:var(--good)} .warn{color:var(--flame)}
@@ -73,7 +87,7 @@ button:focus-visible{outline:3px solid var(--ice);outline-offset:2px}
 .pips i{width:9px;height:6px;border-radius:2px;background:var(--line)}
 .pips i.on{background:var(--star)}
 .buy{grid-row:1 / span 3;grid-column:2;font-family:var(--display);font-size:14px;padding:10px 12px;border-radius:12px;border:0;cursor:pointer;
-  background:var(--star);color:#2a1d00;box-shadow:0 3px 0 var(--star-dk);min-width:76px}
+  background:var(--star);color:#2a1d00;box-shadow:0 3px 0 var(--star-dk);min-width:76px;min-height:44px}
 .buy:active{transform:translateY(2px);box-shadow:0 1px 0 var(--star-dk)}
 .buy:disabled{background:var(--line);color:var(--muted);box-shadow:none;cursor:not-allowed;transform:none}
 
@@ -97,7 +111,7 @@ button:focus-visible{outline:3px solid var(--ice);outline-offset:2px}
 .loggrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
 
 .hud{position:absolute;left:0;right:0;top:0;pointer-events:none;display:flex;flex-direction:column;gap:8px;
-  padding-top:12px;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px))}
+  padding-top:calc(12px + env(safe-area-inset-top,0px));padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px))}
 .hud-row{display:flex;gap:10px;align-items:center}
 .pill{font-family:var(--display);font-size:18px;color:var(--star);background:rgba(12,10,34,.7);border:1px solid var(--line);border-radius:999px;padding:6px 12px;white-space:nowrap}
 .prog{flex:1;min-width:0}
@@ -112,7 +126,7 @@ button:focus-visible{outline:3px solid var(--ice);outline-offset:2px}
 .fuelrow .spd{width:auto;margin-left:auto;font-size:12px;color:var(--ice);white-space:nowrap}
 .hearts{font-size:20px;letter-spacing:2px;color:var(--danger);white-space:nowrap;text-shadow:0 1px 3px #000}
 .hearts .off{color:rgba(255,255,255,.2)}
-.icon-btn{pointer-events:auto;font-family:var(--display);font-size:14px;width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:rgba(12,10,34,.7);color:var(--ink);cursor:pointer;flex:none}
+.icon-btn{pointer-events:auto;font-family:var(--display);font-size:14px;width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:rgba(12,10,34,.7);color:var(--ink);cursor:pointer;flex:none}
 .counts{font:800 13px var(--body);display:flex;gap:12px;flex-wrap:wrap;text-shadow:0 1px 3px #000}
 .counts b{color:var(--ice)}
 .counts .al b{color:var(--good)}
@@ -129,8 +143,15 @@ button:focus-visible{outline:3px solid var(--ice);outline-offset:2px}
 .toast.warn{background:rgba(48,16,14,.94);border-color:var(--flame)}
 .toast.warn b{color:var(--flame)}
 @keyframes pop{from{transform:translate(-50%,-10px) scale(.96);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+#oops{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:99;
+  max-width:calc(100% - 32px);min-height:44px;padding:10px 16px;border-radius:12px;border:1px solid var(--danger);
+  background:rgba(48,16,14,.96);color:var(--ink);font:800 14px var(--body);cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.5)}
+/* phones: keep every label at 12px or larger */
+@media (max-width:640px),(pointer:coarse){.route li,.fact b,.data b,.fuelrow span,.toast small{font-size:12px}}
 @media (prefers-reduced-motion:reduce){.toast{animation:none}.btn,.buy{transition:none}}
 </style>
+</head>
+<body>
 
 <div id="app">
   <canvas id="cv" aria-label="Game view"></canvas>
@@ -250,6 +271,22 @@ button:focus-visible{outline:3px solid var(--ice);outline-offset:2px}
   </section>
 </div>
 
+<script>
+/* friendly crash toast: shown once, tap reloads the game */
+(()=>{
+  let shown=false;
+  const oops=msg=>{
+    if(shown||/ResizeObserver loop/i.test(String(msg||'')))return;
+    shown=true;
+    const go=()=>{const b=document.createElement('button');b.id='oops';b.type='button';
+      b.textContent='Something went wrong - tap to reload';b.addEventListener('click',()=>location.reload());
+      document.body.appendChild(b)};
+    document.body?go():addEventListener('DOMContentLoaded',go);
+  };
+  window.onerror=msg=>{oops(msg)};
+  window.onunhandledrejection=e=>oops(e.reason&&e.reason.message);
+})();
+</script>
 <script>
 (()=>{
 const $=s=>document.querySelector(s);
@@ -888,7 +925,7 @@ function renderDescent(){
   const px=d.pad*W;
   ctx.fillStyle='rgba(255,255,255,.18)';ctx.fillRect(px-48,gy-1,96,4);
   const on=Math.floor(clock*2.5)%2===0;ctx.fillStyle=on?'#ffd23f':'#7a5f10';circle(px-48,gy-3,3.5);circle(px+48,gy-3,3.5);
-  ctx.font='700 10px "Space Mono", monospace';ctx.textAlign='center';ctx.fillStyle='rgba(255,255,255,.75)';ctx.fillText('TARGET',px,gy+16);
+  ctx.font='700 12px "Space Mono", monospace';ctx.textAlign='center';ctx.fillStyle='rgba(255,255,255,.75)';ctx.fillText('TARGET',px,gy+16);
   const alt=Math.max(0,gy-(d.y+28));
   if(F.phase!=='landcrash'){ctx.fillStyle='rgba(0,0,0,.28)';const sw=clamp(30-alt*.05,6,30);ctx.beginPath();ctx.ellipse(d.x+alt*.05,gy+2,sw,4,0,0,TAU);ctx.fill()}
   drawParts();
@@ -1123,7 +1160,17 @@ function setPause(on){if(mode!=='flight'&&mode!=='surface')return;paused=on;show
 document.querySelectorAll('[data-pause]').forEach(b=>b.addEventListener('click',()=>setPause(true)));
 $('#resumeBtn').addEventListener('click',()=>setPause(false));
 $('#quitBtn').addEventListener('click',()=>{if(mode==='flight'&&F)save.stars+=F.stars;if(mode==='surface'&&S)save.stars+=S.stars;persist();goHangar()});
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&!paused)setPause(true)});
+/* hidden tab: pause play, stop the loop and silence audio; resume loop + audio on return */
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){
+    if(!paused)setPause(true);
+    if(rafId){cancelAnimationFrame(rafId);rafId=0}
+    try{if(AC&&AC.state==='running')AC.suspend()}catch(e){}
+  }else{
+    try{if(AC&&AC.state==='suspended')AC.resume()}catch(e){}
+    if(!rafId){last=performance.now();rafId=requestAnimationFrame(frame)}
+  }
+});
 
 /* ---------- input ---------- */
 const KM={ArrowLeft:'l',a:'l',A:'l',ArrowRight:'r',d:'r',D:'r',ArrowUp:'u',w:'u',W:'u',' ':'u',ArrowDown:'d',s:'d',S:'d'};
@@ -1150,7 +1197,7 @@ function renderMenu(dt){
 }
 
 /* ---------- loop ---------- */
-let last=performance.now();
+let last=performance.now(),rafId=0;
 function frame(now){
   const dt=Math.min(.05,(now-last)/1000);last=now;
   if(!paused){clock+=dt;if(mode==='flight'&&F)updFlight(dt);else if(mode==='surface'&&S)updSurface(dt)}
@@ -1165,9 +1212,9 @@ function frame(now){
     if(toastT>0){toastT-=dt;if(toastT<=0)$('#toast').hidden=true}
     if(toastT<=0&&tq.length&&(mode==='flight'||mode==='surface')){const n=tq.shift(),t=$('#toast');t.className='toast'+(n.kind==='good'?'':' '+n.kind);t.innerHTML=n.html;t.hidden=false;t.style.animation='none';void t.offsetWidth;t.style.animation='';toastT=n.sec}
   }
-  requestAnimationFrame(frame);
+  rafId=document.hidden?0:requestAnimationFrame(frame);
 }
-resize();goHangar();requestAnimationFrame(frame);
+resize();goHangar();rafId=requestAnimationFrame(frame);
 })();
 </script>
 
